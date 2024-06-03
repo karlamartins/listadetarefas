@@ -6,31 +6,27 @@ import androidx.activity.compose.setContent
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.listadetarefas.ui.theme.ListaDeTarefasTheme
-import com.example.listadetarefas.view.Listatarefas
-import com.example.listadetarefas.view.Salvar
+import com.example.listadetarefas.ui.theme.TaskListTheme
+import com.example.listadetarefas.view.TaskList
+import com.example.listadetarefas.view.CreateTask
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ListaDeTarefasTheme {
+            TaskListTheme {
                 val navController = rememberNavController()
-
-                NavHost(navController = navController, startDestination = "Listatarefas") {
-
+                NavHost(navController = navController, startDestination = "TaskList") {
                     composable(
-                        route = "Listatarefas"
+                        route = "TaskList"
                     ){
-                        Listatarefas(navController)
+                        TaskList(navController)
                     }
                     composable (
-                        route = "Salvar"
+                        route = "CreateTask"
                     ){
-                        Salvar(navController)
+                        CreateTask(navController)
                     }
-
-
                 }
             }
         }
