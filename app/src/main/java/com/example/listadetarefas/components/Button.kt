@@ -1,4 +1,4 @@
-package com.example.listadetarefas.componentes
+package com.example.listadetarefas.components
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -11,25 +11,18 @@ import com.example.listadetarefas.ui.theme.White
 import com.example.listadetarefas.ui.theme.azul
 
 @Composable
-fun Botao(
-
-    onClick: () -> Unit,
-    modifier: Modifier,
-    texto: String,
-
-    ){
-
+fun Button(
+  onClick: () -> Unit,
+  modifier: Modifier,
+  ) {
     Button(
-        onClick,
-        modifier,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = azul,
-            contentColor = White
-
-        )
+      onClick,
+      modifier,
+      colors = ButtonDefaults.buttonColors(
+        containerColor = azul,
+        contentColor = White
+      )
     ) {
-        Text(text = texto, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-
+      Text(text = "Salvar", fontWeight = FontWeight.Bold, fontSize = 18.sp)
     }
-
 }
