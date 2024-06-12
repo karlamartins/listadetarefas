@@ -1,6 +1,5 @@
 package com.example.listadetarefas.view
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,14 +27,13 @@ import com.example.listadetarefas.ui.theme.White
 import com.example.listadetarefas.ui.theme.black
 import com.example.listadetarefas.ui.theme.purple400
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskList(
   navController: NavController,
+  taskRepository: TaskRepository,
 ) {
   val context = LocalContext.current
-  val taskRepository = TaskRepository()
 
   Scaffold(
     topBar = {
@@ -64,20 +62,22 @@ fun TaskList(
           contentDescription = "Icone de salvar tarefas"
         )
       }
-    }
-  ) {
-    val taskList = taskRepository.recoverTask().collectAsState(mutableListOf()).value
-    LazyColumn(
-      modifier = Modifier.padding(top = 60.dp)
-    ) {
-      itemsIndexed(taskList) { position, _ ->
-        TaskItem(
-          position = position,
-          taskList = taskList,
-          context = context,
-          navController = navController
-        )
+    },
+    content =  { padding ->
+      val taskList = taskRepository.recoverTask().collectAsState(mutableListOf()).value
+      LazyColumn(
+        modifier = Modifier.padding(top = 60.dp)
+      ) {
+        itemsIndexed(taskList) { position, _ ->
+          TaskItem(
+            position = position,
+            taskList = taskList,
+            context = context,
+            navController = navController,
+            taskRepository = taskRepository,
+          )
+        }
       }
     }
-  }
+  )
 }

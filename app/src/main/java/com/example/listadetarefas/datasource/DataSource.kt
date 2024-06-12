@@ -29,11 +29,11 @@ class DataSource {
 
     db.collection("tasks").get().addOnCompleteListener { querySnapshot ->
       if (querySnapshot.isSuccessful) {
-        for (document in querySnapshot.result) {
-          val task = document.toObject(Task::class.java)
+        for (taskDocument in querySnapshot.result) {
+          val task = taskDocument.toObject(Task::class.java)
           taskList.add(task)
-          _allTasks.value = taskList
         }
+        _allTasks.value = taskList
       }
     }
     return allTasks
