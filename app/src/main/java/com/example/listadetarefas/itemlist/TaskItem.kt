@@ -36,19 +36,20 @@ fun TaskItem(
   position: Int,
   taskList: MutableList<Task>,
   context: Context,
-  navController: NavController
+  navController: NavController,
+  taskRepository: TaskRepository,
 ) {
   val title = taskList[position].title
   val description = taskList[position].description
   val priority = taskList[position].priority
   val scope = rememberCoroutineScope()
-  val taskRepository = TaskRepository()
 
   fun deleteDialog() {
     val alertDialog = AlertDialog.Builder(context)
     alertDialog.setTitle("Deletar tarefa")
       .setMessage("Deseja excluir a tarefa?")
       .setPositiveButton("Sim") { _, _ ->
+        taskRepository.deleteTask(title.toString())
         scope.launch(Dispatchers.Main) {
           taskRepository.deleteTask(title.toString())
           taskList.removeAt(position)

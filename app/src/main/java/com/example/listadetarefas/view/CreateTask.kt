@@ -48,11 +48,11 @@ import kotlinx.coroutines.launch
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun CreateTask(
-  navController: NavController
+  navController: NavController,
+  taskRepository: TaskRepository,
 ) {
   val scope = rememberCoroutineScope()
   val context = LocalContext.current
-  val taskRepository = TaskRepository()
 
   Scaffold(
     topBar = {
