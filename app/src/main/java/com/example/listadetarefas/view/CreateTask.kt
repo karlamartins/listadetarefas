@@ -149,32 +149,16 @@ fun CreateTask(
             priority = priority
           )
           scope.launch(Dispatchers.IO) {
-            if (title.isEmpty()) {
+            if (title.isEmpty() || description.isEmpty()) {
               message = false
-            } else if (
-              title.isNotEmpty() && description.isNotEmpty() && lowPriority) {
-              taskRepository.saveTask(taskItem(Constants.LOW_PRIORITY))
-              message = true
-            } else if (title.isNotEmpty() && description.isNotEmpty() && mediumPriority) {
-              taskRepository.saveTask(taskItem(Constants.MEDIUM_PRIORITY))
-              message = true
-            } else if (title.isNotEmpty() && description.isNotEmpty() && highPriority) {
-              taskRepository.saveTask(taskItem(Constants.HIGH_PRIORITY))
-              message = true
-            } else if (title.isNotEmpty() && description.isNotEmpty() && noPriority) {
-              taskRepository.saveTask(taskItem(Constants.NO_PRIORITY))
-              message = true
-            } else if (title.isNotEmpty() && lowPriority) {
-              taskRepository.saveTask(taskItem(Constants.LOW_PRIORITY))
-              message = true
-            } else if (title.isNotEmpty() && mediumPriority) {
-              taskRepository.saveTask(taskItem(Constants.MEDIUM_PRIORITY))
-              message = true
-            } else if (title.isNotEmpty() && highPriority) {
-              taskRepository.saveTask(taskItem(Constants.HIGH_PRIORITY))
-              message = true
             } else {
-              taskRepository.saveTask(taskItem(Constants.NO_PRIORITY))
+              val priority = when {
+                lowPriority -> Constants.LOW_PRIORITY
+                mediumPriority -> Constants.MEDIUM_PRIORITY
+                highPriority -> Constants.HIGH_PRIORITY
+                else -> Constants.NO_PRIORITY
+              }
+              taskRepository.saveTask(taskItem(priority))
               message = true
             }
           }
@@ -184,10 +168,9 @@ fun CreateTask(
               Toast.makeText(context, "Sucesso ao salvar tarefa", Toast.LENGTH_SHORT).show()
               navController.popBackStack()
             } else {
-              Toast.makeText(context, "Titulo da tarefa é obrigatorio", Toast.LENGTH_SHORT).show()
+              Toast.makeText(context, "Titulo e descrição da tarefa são obrigatórios ", Toast.LENGTH_SHORT).show()
             }
           }
-
         },
         modifier = Modifier
           .fillMaxWidth()

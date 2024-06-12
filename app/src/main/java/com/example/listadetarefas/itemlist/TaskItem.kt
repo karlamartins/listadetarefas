@@ -49,11 +49,10 @@ fun TaskItem(
     alertDialog.setTitle("Deletar tarefa")
       .setMessage("Deseja excluir a tarefa?")
       .setPositiveButton("Sim") { _, _ ->
-
-        taskRepository.deleteTask(title.toString())
         scope.launch(Dispatchers.Main) {
+          taskRepository.deleteTask(title.toString())
           taskList.removeAt(position)
-          navController.navigate("Listatarefas")
+          navController.navigate("TaskList")
           Toast.makeText(context, "Tarefa deletada", Toast.LENGTH_SHORT).show()
         }
       }
