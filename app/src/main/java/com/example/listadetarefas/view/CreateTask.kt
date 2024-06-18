@@ -73,10 +73,7 @@ fun CreateTask(
   ) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
-    val noPriority by remember { mutableStateOf(false) }
-    var lowPriority by remember { mutableStateOf(false) }
-    var mediumPriority by remember { mutableStateOf(false) }
-    var highPriority by remember { mutableStateOf(false) }
+    var priority by remember { mutableStateOf(Constants.NO_PRIORITY) }
 
     Column(
       modifier = Modifier
@@ -113,8 +110,8 @@ fun CreateTask(
         )
 
         RadioButton(
-          selected = lowPriority,
-          onClick = { lowPriority = !lowPriority },
+          selected = priority == Constants.LOW_PRIORITY,
+          onClick = { priority = Constants.LOW_PRIORITY },
           colors = RadioButtonDefaults.colors(
             unselectedColor = verde,
             selectedColor = verde
@@ -122,8 +119,8 @@ fun CreateTask(
         )
 
         RadioButton(
-          selected = mediumPriority,
-          onClick = { mediumPriority = !mediumPriority },
+          selected = priority == Constants.MEDIUM_PRIORITY,
+          onClick = { priority = Constants.MEDIUM_PRIORITY },
           colors = RadioButtonDefaults.colors(
             unselectedColor = laranja,
             selectedColor = laranja
@@ -131,8 +128,8 @@ fun CreateTask(
         )
 
         RadioButton(
-          selected = highPriority,
-          onClick = { highPriority = !highPriority },
+          selected = priority == Constants.HIGH_PRIORITY,
+          onClick = { priority = Constants.HIGH_PRIORITY },
           colors = RadioButtonDefaults.colors(
             unselectedColor = vermelho,
             selectedColor = vermelho
@@ -140,28 +137,18 @@ fun CreateTask(
         )
 
       }
-      Button(
-        onClick = {
-          var message = true
-          fun taskItem(priority: Int) = Task(
-            title = title,
-            description = description,
-            priority = priority
-          )
-          scope.launch(Dispatchers.IO) {
-            if (title.isEmpty() || description.isEmpty()) {
-              message = false
-            } else {
-              val priority = when {
-                lowPriority -> Constants.LOW_PRIORITY
-                mediumPriority -> Constants.MEDIUM_PRIORITY
-                highPriority -> Constants.HIGH_PRIORITY
-                else -> Constants.NO_PRIORITY
+        Button(
+          onClick = {
+            var message = true
+
+            scope.launch(Dispatchers.IO) {
+              if (title.isEmpty() || description.isEmpty()) {
+                message = false
+              } else {
+                taskRepository.saveTask(Task(title, description, priority))
+                message = true
               }
-              taskRepository.saveTask(taskItem(priority))
-              message = true
             }
-          }
 
           scope.launch(Dispatchers.Main) {
             if (message) {
