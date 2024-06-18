@@ -77,16 +77,16 @@ fun CreateTask(
 
     Column(
       modifier = Modifier
-        .fillMaxSize()
-        .verticalScroll(rememberScrollState())
-        .padding(20.dp, 80.dp, 20.dp, 0.dp)
+          .fillMaxSize()
+          .verticalScroll(rememberScrollState())
+          .padding(20.dp, 80.dp, 20.dp, 0.dp)
     ) {
       InputText(
         value = title,
         onValueChange = { title = it },
         modifier = Modifier
-          .fillMaxWidth()
-          .height(56.dp),
+            .fillMaxWidth()
+            .height(56.dp),
         label = "Titulo Tarefas",
         maxLines = 1,
       )
@@ -94,8 +94,8 @@ fun CreateTask(
         value = description,
         onValueChange = { description = it },
         modifier = Modifier
-          .fillMaxWidth()
-          .height(200.dp),
+            .fillMaxWidth()
+            .height(200.dp),
         label = "Descriçao Tarefas",
         maxLines = 5,
       )
@@ -137,32 +137,33 @@ fun CreateTask(
         )
 
       }
-        Button(
-          onClick = {
-            var message = true
+      Button(
+        onClick = {
+          val hasRequiredFields = title.isNotEmpty() && description.isNotEmpty()
 
-            scope.launch(Dispatchers.IO) {
-              if (title.isEmpty() || description.isEmpty()) {
-                message = false
-              } else {
-                taskRepository.saveTask(Task(title, description, priority))
-                message = true
-              }
+          scope.launch(Dispatchers.IO) {
+            if (hasRequiredFields) {
+              taskRepository.saveTask(Task(title, description, priority))
             }
+          }
 
           scope.launch(Dispatchers.Main) {
-            if (message) {
+            if (hasRequiredFields) {
               Toast.makeText(context, "Sucesso ao salvar tarefa", Toast.LENGTH_SHORT).show()
               navController.popBackStack()
             } else {
-              Toast.makeText(context, "Titulo e descrição da tarefa são obrigatórios ", Toast.LENGTH_SHORT).show()
+              Toast.makeText(
+                context,
+                "Titulo e descrição da tarefa são obrigatórios ",
+                Toast.LENGTH_SHORT
+              ).show()
             }
           }
         },
         modifier = Modifier
-          .fillMaxWidth()
-          .height(80.dp)
-          .padding(20.dp),
+            .fillMaxWidth()
+            .height(80.dp)
+            .padding(20.dp),
       )
     }
   }
