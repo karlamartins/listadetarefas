@@ -10,6 +10,7 @@ import com.example.listadetarefas.repositorio.TaskRepository
 import com.example.listadetarefas.ui.theme.TaskListTheme
 import com.example.listadetarefas.view.TaskList
 import com.example.listadetarefas.view.CreateTask
+import com.example.listadetarefas.view.FilterScreen
 
 class MainActivity : ComponentActivity() {
 
@@ -29,6 +30,10 @@ class MainActivity : ComponentActivity() {
                         route = "CreateTask"
                     ){
                         CreateTask(navController, taskRepository)
+                    }
+                    composable(
+                        route = "Filter"){
+                        FilterScreen(navController)
                     }
                 }
             }
