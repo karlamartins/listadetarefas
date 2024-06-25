@@ -88,7 +88,7 @@ fun TaskList(
         itemsIndexed(taskList) { position, _ ->
           TaskItem(
             position = position,
-            taskList = taskList,
+            taskList = taskList.toMutableList(),
             context = context,
             navController = navController,
             taskRepository = taskRepository,
