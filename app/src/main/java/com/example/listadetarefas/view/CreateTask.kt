@@ -73,23 +73,20 @@ fun CreateTask(
   ) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
-    val noPriority by remember { mutableStateOf(false) }
-    var lowPriority by remember { mutableStateOf(false) }
-    var mediumPriority by remember { mutableStateOf(false) }
-    var highPriority by remember { mutableStateOf(false) }
+    var priority by remember { mutableStateOf(Constants.NO_PRIORITY) }
 
     Column(
       modifier = Modifier
-        .fillMaxSize()
-        .verticalScroll(rememberScrollState())
-        .padding(20.dp, 80.dp, 20.dp, 0.dp)
+          .fillMaxSize()
+          .verticalScroll(rememberScrollState())
+          .padding(20.dp, 80.dp, 20.dp, 0.dp)
     ) {
       InputText(
         value = title,
         onValueChange = { title = it },
         modifier = Modifier
-          .fillMaxWidth()
-          .height(56.dp),
+            .fillMaxWidth()
+            .height(56.dp),
         label = "Titulo Tarefas",
         maxLines = 1,
       )
@@ -97,8 +94,8 @@ fun CreateTask(
         value = description,
         onValueChange = { description = it },
         modifier = Modifier
-          .fillMaxWidth()
-          .height(200.dp),
+            .fillMaxWidth()
+            .height(200.dp),
         label = "Descriçao Tarefas",
         maxLines = 5,
       )
@@ -113,8 +110,8 @@ fun CreateTask(
         )
 
         RadioButton(
-          selected = lowPriority,
-          onClick = { lowPriority = !lowPriority },
+          selected = priority == Constants.LOW_PRIORITY,
+          onClick = { priority = Constants.LOW_PRIORITY },
           colors = RadioButtonDefaults.colors(
             unselectedColor = verde,
             selectedColor = verde
@@ -122,8 +119,8 @@ fun CreateTask(
         )
 
         RadioButton(
-          selected = mediumPriority,
-          onClick = { mediumPriority = !mediumPriority },
+          selected = priority == Constants.MEDIUM_PRIORITY,
+          onClick = { priority = Constants.MEDIUM_PRIORITY },
           colors = RadioButtonDefaults.colors(
             unselectedColor = laranja,
             selectedColor = laranja
@@ -131,8 +128,8 @@ fun CreateTask(
         )
 
         RadioButton(
-          selected = highPriority,
-          onClick = { highPriority = !highPriority },
+          selected = priority == Constants.HIGH_PRIORITY,
+          onClick = { priority = Constants.HIGH_PRIORITY },
           colors = RadioButtonDefaults.colors(
             unselectedColor = vermelho,
             selectedColor = vermelho
@@ -142,40 +139,31 @@ fun CreateTask(
       }
       Button(
         onClick = {
-          var message = true
-          fun taskItem(priority: Int) = Task(
-            title = title,
-            description = description,
-            priority = priority
-          )
+          val hasRequiredFields = title.isNotEmpty() && description.isNotEmpty()
+
           scope.launch(Dispatchers.IO) {
-            if (title.isEmpty() || description.isEmpty()) {
-              message = false
-            } else {
-              val priority = when {
-                lowPriority -> Constants.LOW_PRIORITY
-                mediumPriority -> Constants.MEDIUM_PRIORITY
-                highPriority -> Constants.HIGH_PRIORITY
-                else -> Constants.NO_PRIORITY
-              }
-              taskRepository.saveTask(taskItem(priority))
-              message = true
+            if (hasRequiredFields) {
+              taskRepository.saveTask(Task(title, description, priority))
             }
           }
 
           scope.launch(Dispatchers.Main) {
-            if (message) {
+            if (hasRequiredFields) {
               Toast.makeText(context, "Sucesso ao salvar tarefa", Toast.LENGTH_SHORT).show()
               navController.popBackStack()
             } else {
-              Toast.makeText(context, "Titulo e descrição da tarefa são obrigatórios ", Toast.LENGTH_SHORT).show()
+              Toast.makeText(
+                context,
+                "Titulo e descrição da tarefa são obrigatórios ",
+                Toast.LENGTH_SHORT
+              ).show()
             }
           }
         },
         modifier = Modifier
-          .fillMaxWidth()
-          .height(80.dp)
-          .padding(20.dp),
+            .fillMaxWidth()
+            .height(80.dp)
+            .padding(20.dp),
       )
     }
   }
