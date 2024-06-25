@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(
                         route = "Filter"){
-                        FilterScreen(navController)
+                        FilterScreen(navController, taskRepository)
                     }
                 }
             }
