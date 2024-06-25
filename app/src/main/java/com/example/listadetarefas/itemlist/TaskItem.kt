@@ -44,6 +44,7 @@ fun TaskItem(
   val priority = taskList[position].priority
   val scope = rememberCoroutineScope()
 
+
   fun deleteDialog() {
     val alertDialog = AlertDialog.Builder(context)
     alertDialog.setTitle("Deletar tarefa")
