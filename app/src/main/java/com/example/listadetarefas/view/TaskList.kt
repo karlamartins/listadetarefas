@@ -1,9 +1,6 @@
 package com.example.listadetarefas.view
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -43,9 +40,6 @@ fun TaskList(
 ) {
 
   val context = LocalContext.current
-  val selectedFilters = navController.currentBackStackEntry?.arguments?.getString("filters")?.split(",")?.map { Priority.valueOf(it) } ?: emptyList()
-  val tasks = taskRepository.recoverTask().collectAsState()
-
 
   Scaffold(
     topBar = {
@@ -91,32 +85,17 @@ fun TaskList(
       LazyColumn(
         modifier = Modifier.padding(top = 60.dp)
       ) {
-        if (tasks.value.isNotEmpty()) {
-          val filteredTasks = tasks.value.filter { task ->
-            selectedFilters.isEmpty() || selectedFilters.contains(task.priority)
-          }
-          TaskListContent(filteredTasks = filteredTasks)
-        } else {
-          Text(text = "Nenhuma tarefa encontrada", fontSize = 20.sp)
+        itemsIndexed(taskList) { position, _ ->
+          TaskItem(
+            position = position,
+            taskList = taskList,
+            context = context,
+            navController = navController,
+            taskRepository = taskRepository,
+          )
         }
       }
     }
   )
-}@Composable
-private fun TaskListContent(filteredTasks: List<Task>) {
-  Column {
-    filteredTasks.forEachIndexed { index, task ->
-      TaskItem(task = task, index = index + 1)
-      Spacer(modifier = Modifier.height(8.dp))
-    }
-  }
 }
 
-@Composable
-private fun TaskItem(task: Task, index: Int) {
-
-  Text(
-    text = "Tarefa $index: ${task.title} - ${task.description} (${task.priority.name})",
-    style = androidx.compose.ui.text.TextStyle(fontSize = 16.sp)
-  )
-}
