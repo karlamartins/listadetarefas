@@ -52,7 +52,6 @@ fun TaskList(
   taskRepository: TaskRepository,
 ) {
   var searchText by remember { mutableStateOf("") }
-  var active by remember { mutableStateOf(false) }
   val taskList by taskRepository.recoverTask().collectAsState(initial = emptyList())
   var filteredTasks by remember { mutableStateOf(taskList) }
   val context = LocalContext.current
@@ -102,17 +101,15 @@ fun TaskList(
                   taskList
                 }
               },
-              onSearch = {
-                Toast.makeText(context, searchText, Toast.LENGTH_SHORT).show()
-              },
-              expanded = searchText.isNotEmpty(),
-              onExpandedChange = { active = it },
+              onSearch = {},
+              expanded = false,
+              onExpandedChange = {},
               placeholder = { Text("Pesquisar") },
               leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) }
             )
           },
-          expanded = searchText.isNotEmpty(),
-          onExpandedChange = { active = it },
+          expanded = false,
+          onExpandedChange = {},
         ) {}
 
       }
