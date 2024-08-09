@@ -15,8 +15,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.listadetarefas.R
 import com.example.listadetarefas.components.Button
 import com.example.listadetarefas.components.InputText
 import com.example.listadetarefas.constant.Constants
@@ -45,7 +47,7 @@ fun DetailScreen(
     modifier = Modifier
       .fillMaxWidth()
       .height(56.dp),
-    label = "Titulo Tarefas",
+    label = LocalContext.current.getString(R.string.task_title),
     maxLines = 1,
   )
   InputText(
