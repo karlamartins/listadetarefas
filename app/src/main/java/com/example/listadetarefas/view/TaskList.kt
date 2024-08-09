@@ -53,7 +53,6 @@ fun TaskList(
 ) {
   var searchText by remember { mutableStateOf("") }
   val taskList by taskRepository.recoverTask().collectAsState(initial = emptyList())
-  var filteredTasks by remember { mutableStateOf(taskList) }
   val context = LocalContext.current
 
   Scaffold(
@@ -95,11 +94,6 @@ fun TaskList(
               query = searchText,
               onQueryChange = { newText ->
                 searchText = newText
-                filteredTasks = if (newText.isNotEmpty()) {
-                  taskList.filter { it.title!!.contains(newText, ignoreCase = true) }
-                } else {
-                  taskList
-                }
               },
               onSearch = {},
               expanded = false,
@@ -127,6 +121,12 @@ fun TaskList(
       }
     },
     content = { padding ->
+     val filteredTasks = if (searchText.isNotEmpty()) {
+      taskList.filter { it.title!!.contains(searchText, ignoreCase = true) }
+    } else {
+      taskList
+    }
+
       LazyColumn(
         modifier = Modifier.padding(top = 160.dp)
       ) {
