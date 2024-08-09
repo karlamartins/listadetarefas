@@ -2,9 +2,11 @@ package com.example.listadetarefas.datasource
 
 import com.example.listadetarefas.model.Task
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.tasks.await
 
 class DataSource {
   private val db = FirebaseFirestore.getInstance()
@@ -15,15 +17,38 @@ class DataSource {
     val taskMap = hashMapOf(
       "title" to task.title,
       "description" to task.description,
-      "priority" to task.priority
+      "priority" to task.priority,
+      "id" to task.id
     )
-    task.title?.let { nonNullTitle ->
       db.collection("tasks")
-        .document(nonNullTitle)
+        .document(task.id)
         .set(taskMap)
     }
+  suspend fun updateTask(task: Task) {
+    val taskMap = hashMapOf(
+      "title" to task.title,
+      "description" to task.description,
+      "priority" to task.priority,
+      "id" to task.id
+    )
+
+    val docRef = db.collection("tasks").document(task.id)
+    docRef.update(taskMap as Map<String, Any>).await()
   }
 
+  suspend fun getTaskById(id: String): Task? {
+    return try {
+      val docRef = db.collection("tasks").document(id)
+      val snapshot = docRef.get().await()
+      if (snapshot.exists()) {
+        snapshot.toObject(Task::class.java)
+      } else {
+        null
+      }
+    } catch (e: Exception) {
+      null
+    }
+  }
   fun recoverTask(): Flow<MutableList<Task>> {
     val taskList: MutableList<Task> = mutableListOf()
 
@@ -39,9 +64,12 @@ class DataSource {
     return allTasks
   }
 
-  fun deleteTask(title: String) {
+  fun deleteTask(id: String) {
     db.collection("tasks")
-      .document(title)
+      .document(id)
       .delete()
   }
+
 }
+
+

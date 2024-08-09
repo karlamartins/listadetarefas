@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.listadetarefas.constant.Constants.ALL_PRIORITY
 import com.example.listadetarefas.constant.Constants.HIGH_PRIORITY
 import com.example.listadetarefas.constant.Constants.LOW_PRIORITY
 import com.example.listadetarefas.constant.Constants.MEDIUM_PRIORITY
@@ -38,6 +39,10 @@ fun FilterScreen(
   navController: NavController,
   taskRepository: TaskRepository,
 ) {
+
+  val (allPriorityChecked, setAllPriorityChecked) = remember {
+    mutableStateOf(taskRepository.filters.contains(ALL_PRIORITY))
+  }
   val (lowPriorityChecked, setLowPriorityChecked) = remember {
     mutableStateOf(taskRepository.filters.contains(LOW_PRIORITY))
   }
@@ -53,9 +58,9 @@ fun FilterScreen(
   ) {
     Box(
       modifier = Modifier
-        .fillMaxWidth()
-        .height(65.dp)
-        .background(purple400),
+          .fillMaxWidth()
+          .height(65.dp)
+          .background(purple400),
     ) {
       Text(
         text = "Filtro",
@@ -68,9 +73,9 @@ fun FilterScreen(
 
     Column(
       modifier = Modifier
-        .fillMaxSize()
-        .padding(top = 60.dp)
-        .padding(horizontal = 16.dp)
+          .fillMaxSize()
+          .padding(top = 60.dp)
+          .padding(horizontal = 16.dp)
     ) {
 
       Spacer(modifier = Modifier.height(16.dp))
@@ -81,8 +86,37 @@ fun FilterScreen(
         horizontalArrangement = Arrangement.SpaceBetween
       ) {
         Checkbox(
+          checked = allPriorityChecked,
+          onCheckedChange = { isChecked ->
+            setAllPriorityChecked (isChecked)
+            setLowPriorityChecked(isChecked)
+            setMediumPriorityChecked(isChecked)
+            setHighPriorityChecked(isChecked)
+          },
+          modifier = Modifier.padding(vertical = 8.dp)
+        )
+        Text(
+          text = "Todas Prioridades",
+          modifier = Modifier.weight(1f)
+        )
+      }
+
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+      ) {
+        Checkbox(
           checked = lowPriorityChecked,
-          onCheckedChange = { setLowPriorityChecked(it) },
+          onCheckedChange = { checked ->
+            setLowPriorityChecked(checked)
+              if (!checked) {
+                  setAllPriorityChecked(false)
+              } else if (highPriorityChecked && mediumPriorityChecked){
+                  setAllPriorityChecked(true)
+              }
+
+          },
           modifier = Modifier.padding(vertical = 8.dp)
         )
         Text(
@@ -98,7 +132,14 @@ fun FilterScreen(
       ) {
         Checkbox(
           checked = mediumPriorityChecked,
-          onCheckedChange = { setMediumPriorityChecked(it) },
+          onCheckedChange = { checked ->
+            setMediumPriorityChecked(checked)
+              if (!checked) {
+                  setAllPriorityChecked(false)
+              } else if (lowPriorityChecked && highPriorityChecked){
+                  setAllPriorityChecked(true)
+              }
+          },
           modifier = Modifier.padding(vertical = 8.dp)
         )
         Text(
@@ -114,7 +155,14 @@ fun FilterScreen(
       ) {
         Checkbox(
           checked = highPriorityChecked,
-          onCheckedChange = { setHighPriorityChecked(it) },
+          onCheckedChange = { checked ->
+            setHighPriorityChecked(checked)
+              if (!checked) {
+                  setAllPriorityChecked(false)
+              } else if (lowPriorityChecked && mediumPriorityChecked){
+                  setAllPriorityChecked(true)
+              }
+          },
           modifier = Modifier.padding(vertical = 8.dp)
         )
         Text(
@@ -132,6 +180,7 @@ fun FilterScreen(
         FloatingActionButton(
           onClick = {
             val selectedFilters = mutableListOf<Int>()
+            if (allPriorityChecked) selectedFilters.add(ALL_PRIORITY)
             if (lowPriorityChecked) selectedFilters.add(LOW_PRIORITY)
             if (mediumPriorityChecked) selectedFilters.add(MEDIUM_PRIORITY)
             if (highPriorityChecked) selectedFilters.add(HIGH_PRIORITY)

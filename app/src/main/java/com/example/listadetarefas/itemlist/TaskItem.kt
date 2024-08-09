@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +31,7 @@ import com.example.listadetarefas.ui.theme.verde
 import com.example.listadetarefas.ui.theme.vermelho
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.net.URLEncoder
 
 @Composable
 fun TaskItem(
@@ -43,6 +45,7 @@ fun TaskItem(
   val description = taskList[position].description
   val priority = taskList[position].priority
   val scope = rememberCoroutineScope()
+  val task = taskList[position]
 
 
   fun deleteDialog() {
@@ -50,9 +53,9 @@ fun TaskItem(
     alertDialog.setTitle("Deletar tarefa")
       .setMessage("Deseja excluir a tarefa?")
       .setPositiveButton("Sim") { _, _ ->
-        taskRepository.deleteTask(title.toString())
+        taskRepository.deleteTask(task.id)
         scope.launch(Dispatchers.Main) {
-          taskRepository.deleteTask(title.toString())
+          taskRepository.deleteTask(task.id)
           taskList.removeAt(position)
           navController.navigate("TaskList")
           Toast.makeText(context, "Tarefa deletada", Toast.LENGTH_SHORT).show()
@@ -87,7 +90,25 @@ fun TaskItem(
     ConstraintLayout(
       modifier = Modifier.padding(20.dp)
     ) {
-      val (txtTitle, txtDescription, cardPriority, txtPriority, btDelete) = createRefs()
+      val (iconEdit, txtTitle, txtDescription, cardPriority, txtPriority, btDelete) = createRefs()
+
+      IconButton(
+        onClick = {
+          navController.navigate("EditTask/${task.id}")
+        },
+        modifier = Modifier
+          .constrainAs(iconEdit) {
+            top.linkTo(txtTitle.top)
+            end.linkTo(btDelete.end)
+            start.linkTo(cardPriority.end, margin = 10.dp)
+          }
+      ) {
+        Icon(
+          imageVector = ImageVector.vectorResource(id = R.drawable.baseline_edit_24),
+          contentDescription = "Editor"
+        )
+      }
+
 
       Text(
         text = title.toString(),
