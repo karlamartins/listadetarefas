@@ -43,6 +43,5 @@ class TaskRepository {
   fun setFilter(selectedFilters: MutableList<Int>) {
     filters = selectedFilters
   }
-
 }
 

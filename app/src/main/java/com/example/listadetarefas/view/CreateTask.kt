@@ -77,16 +77,16 @@ fun CreateTask(
 
     Column(
       modifier = Modifier
-        .fillMaxSize()
-        .verticalScroll(rememberScrollState())
-        .padding(20.dp, 80.dp, 20.dp, 0.dp)
+          .fillMaxSize()
+          .verticalScroll(rememberScrollState())
+          .padding(20.dp, 80.dp, 20.dp, 0.dp)
     ) {
       InputText(
         value = title,
         onValueChange = { title = it },
         modifier = Modifier
-          .fillMaxWidth()
-          .height(56.dp),
+            .fillMaxWidth()
+            .height(56.dp),
         label = "Titulo Tarefas",
         maxLines = 1,
       )
@@ -94,8 +94,8 @@ fun CreateTask(
         value = description,
         onValueChange = { description = it },
         modifier = Modifier
-          .fillMaxWidth()
-          .height(200.dp),
+            .fillMaxWidth()
+            .height(200.dp),
         label = "Descriçao Tarefas",
         maxLines = 5,
       )
@@ -161,9 +161,9 @@ fun CreateTask(
           }
         },
         modifier = Modifier
-          .fillMaxWidth()
-          .height(80.dp)
-          .padding(20.dp),
+            .fillMaxWidth()
+            .height(80.dp)
+            .padding(20.dp),
       )
     }
   }
